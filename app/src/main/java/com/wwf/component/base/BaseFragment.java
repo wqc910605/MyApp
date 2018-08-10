@@ -16,12 +16,35 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import me.yokeyword.fragmentation.SupportFragment;
 
-public abstract class BaseFragment<P extends Presenter> extends SupportFragment implements BaseActivity.OnNetworkListener {
+/**
+ * 在module中, 无法使用butterknife ,所以基类放到app下面
+ * @param <P>
+ */
+public abstract class BaseFragment<P extends Presenter> extends SupportFragment{
 
     private Unbinder mUnbinder;
     protected P mPresenter;
     private ImageView mIvActionBarLeftBack;
     protected BaseActivity mBaseActivity;
+
+    /**
+     * 网络状态监听器
+     * @param isHasNetwork 是否有网络
+     */
+    private BaseActivity.OnNetworkListener mOnNetworkListener = new BaseActivity.OnNetworkListener() {
+        @Override
+        public void onNetwork(boolean isHasNetwork) {
+            onNetState(isHasNetwork);
+        }
+    };
+
+    /**
+     * 网络状态监听
+     * @param isHasNetwork
+     */
+    protected void onNetState(boolean isHasNetwork) {
+
+    }
 
     @Nullable
     @Override
@@ -38,7 +61,7 @@ public abstract class BaseFragment<P extends Presenter> extends SupportFragment 
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        String simpleName = this.getClass().getSimpleName();
+//        String simpleName = this.getClass().getSimpleName();
         //界面被创建之前
 //        Toasty.normal(mBaseActivity, "我被创建了 " + simpleName, Toast.LENGTH_SHORT).show();
         beforCreate(savedInstanceState);
@@ -47,7 +70,7 @@ public abstract class BaseFragment<P extends Presenter> extends SupportFragment 
             mPresenter.onViewCreated();
         }
         //注册网络状态监听器
-        mBaseActivity.setOnNetworkListener(this);
+        mBaseActivity.setOnNetworkListener(mOnNetworkListener);
         initActionBar(view);
         initData();
         initListener();
@@ -81,6 +104,7 @@ public abstract class BaseFragment<P extends Presenter> extends SupportFragment 
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();//解绑butterknife
+        mOnNetworkListener = null;
         if (mPresenter != null) {
             mPresenter.onDestroyView();
             mPresenter = null;
@@ -88,6 +112,10 @@ public abstract class BaseFragment<P extends Presenter> extends SupportFragment 
         }
     }
 
+    /**
+     * 当使用singleTask或者singleTop模式, 跳转界面时, 接受新意图, 类似于activity中的onNewIntent()方法
+     * @param args
+     */
     @Override
     public void onNewBundle(Bundle args) {
         super.onNewBundle(args);
@@ -96,6 +124,10 @@ public abstract class BaseFragment<P extends Presenter> extends SupportFragment 
         }
     }
 
+    /**
+     * actionbar的统一处理
+     * @param view
+     */
     protected void initActionBar(View view) {
         //返回键处理
         mIvActionBarLeftBack = view.findViewById(R.id.iv_actionbar_left_back);
@@ -111,42 +143,63 @@ public abstract class BaseFragment<P extends Presenter> extends SupportFragment 
         }
     }
 
-    //设置左侧返回按钮的图片, 等于0时, 不设置, 使用默认的图片
+
+    /**
+     * 设置左侧返回按钮的图片, 等于0时, 不设置, 使用默认的图片
+     * @return
+     */
     protected int setActionBarLeftBack() {
         return 0;
     }
 
-    //界面被创建之前, 执行
+    /**
+     *  界面被创建之前, 执行
+     * @param savedInstanceState
+     */
     private void beforCreate(Bundle savedInstanceState) {
 
     }
 
-    //初始化presenter时, 调用setPresenter方法即可
+    /**
+     * 初始化presenter时, 调用setPresenter方法即可
+     */
     protected abstract void initPresenter();
 
-    //设置presenter方法
+
+    /**
+     * 设置presenter对象的方法, 在子类中的initPresenter方法中调用
+     * @param view 实现View接口的对象
+     * @param presenter presenter对象
+     * @param <V>
+     */
     protected <V extends IView> void setPresenter(@NonNull V view, @NonNull P presenter) {
         this.mPresenter = presenter;
         mPresenter.setView(getContext(), view);
     }
 
-
-    //来个布局id
+    /**
+     * 来个布局资源id
+     * @return
+     */
     public abstract int getLayoutResId();
 
-    //初始化数据
+
+    /**
+     *  初始化数据
+     */
     protected abstract void initData();
 
-    //初始化监听
+    /**
+     * 初始化监听
+     */
     protected abstract void initListener();
 
+    /**
+     * 关闭当前界面
+     */
     public void finishPage() {
         this.pop();
     }
 
-    //网络状态监听器
-    @Override
-    public void onNetwork(boolean isHasNetwork) {
 
-    }
 }

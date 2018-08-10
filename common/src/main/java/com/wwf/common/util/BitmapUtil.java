@@ -11,7 +11,6 @@ public class BitmapUtil {
 
     /**
      * 根据屏幕宽度等比例缩放图片
-     *
      * @param bm
      * @param screenWidth 屏幕宽度
      * @return

@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.wwf.common.mvp.view.IView;
 import com.wwf.common.net.retrofit.RetrofitUtil;
 import com.wwf.common.util.NetworkUtil;
+import com.wwf.common.util.ThreadUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -92,8 +92,11 @@ public abstract class Presenter<V extends IView> implements IPresenter {
                 //取消订阅后, 集合置空
                 mDisposables = null;
             }
-            mContext = null;
-            mView = null;
+            //延迟一会儿, 释放资源, 防止mView调用时, 为空, (有一种情况, Retrofit调用成功后, 再取消请求, 成功时, 还是会回调数据的)
+            ThreadUtil.postDelayed(() -> {
+                mContext = null;
+                mView = null;
+            }, 1200);
         }
     }
 
@@ -150,7 +153,7 @@ public abstract class Presenter<V extends IView> implements IPresenter {
     //上传图片, 可以上传多张图片
     public void uploadImg(String path, List<String> localImgPaths, Map<String, Object> params, int urlflag) {
         if (localImgPaths == null) {
-            Toasty.warning(mContext, "图片地址为空", Toast.LENGTH_SHORT).show();
+//            Toasty.warning(mContext, "图片地址为空", Toast.LENGTH_SHORT).show();
             return;
         }
         if (NetworkUtil.isNetworkAvailable(mContext)) {
@@ -186,7 +189,7 @@ public abstract class Presenter<V extends IView> implements IPresenter {
 
     //失败
     protected void onFailure(String msg, int urlflag) {
-        Toasty.info(mContext, msg, Toast.LENGTH_SHORT).show();
+//        Toasty.info(mContext, msg, Toast.LENGTH_SHORT).show();
     }
 
     //没有网络

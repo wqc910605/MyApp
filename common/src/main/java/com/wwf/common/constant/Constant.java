@@ -1,12 +1,19 @@
 package com.wwf.common.constant;
-//所有的常量都在这里
+
+/**
+ * 所有的常量统一管理
+ */
 public final class Constant {
+
     /**
-     * 是否打印日志
+     *  isDebug 是否打印日志,
+     *  isLeakCanary 是否检测内存泄漏
      */
-    public static final class Log{
+    public static final class Log {
         public static boolean isDebug = true;
+        public static boolean isLeakCanary = true;
     }
+
     /**
      * 有关网络请求的
      */
@@ -34,7 +41,7 @@ public final class Constant {
     /**
      * 有关缓存的常量
      */
-    public static final class Acache{
+    public static final class Acache {
 
     }
 

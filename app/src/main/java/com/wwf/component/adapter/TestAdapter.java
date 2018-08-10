@@ -9,6 +9,9 @@ import com.wwf.component.bean.TestBean;
 
 import java.util.List;
 
+/**
+ * 测试用recyclerview adapter
+ */
 public class TestAdapter extends BaseQuickAdapter<TestBean, BaseViewHolder>{
 
     public TestAdapter(@Nullable List<TestBean> data) {

@@ -9,22 +9,17 @@ import android.view.View;
 import android.view.WindowManager;
 
 /**
- * 上海建业信息科技股份有限公司  挖挖租赁
- * 日  期：   2017/1/19  10:38
- * 作  者：simon
  * 功能描述：屏幕工具
  **/
 public class ScreenUtils {
 
     private ScreenUtils() {
-        /** cannot be instantiated **/
         throw new UnsupportedOperationException("cannot be instantiated");
     }
 
 
     /**
      * 获得屏幕宽度
-     *
      * @param context
      * @return
      */
@@ -39,7 +34,6 @@ public class ScreenUtils {
 
     /**
      * 获得屏幕高度
-     *
      * @param context
      * @return
      */
@@ -54,7 +48,6 @@ public class ScreenUtils {
 
     /**
      * 获取当前屏幕截图，包含状态栏
-     *
      * @param activity
      * @return
      */
@@ -76,7 +69,6 @@ public class ScreenUtils {
 
     /**
      * 获取当前屏幕截图，不包含状态栏
-     *
      * @param activity
      * @return
      */

@@ -10,7 +10,7 @@ import android.os.Bundle;
 public interface IPresenter {
 
     void onCreate(Bundle savedInstanceState);
-    //fragment中的生命周期方法
+
     void onCreateView(Bundle savedInstanceState);
 
     void onViewCreated();

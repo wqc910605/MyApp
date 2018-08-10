@@ -7,9 +7,10 @@ import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.wwf.common.util.ToastUtil;
 import com.wwf.component.R;
-import com.wwf.component.base.BaseFragment;
 import com.wwf.common.eventbus.TabSelectedEvent;
+import com.wwf.component.base.BaseFragment;
 import com.wwf.component.presenter.main.MainFragmentPresenter;
 import com.wwf.component.ui.fragment.find.FindFragment;
 import com.wwf.component.ui.fragment.home.HomeFragment;
@@ -21,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import es.dmoral.toasty.Toasty;
 import me.yokeyword.eventbusactivityscope.EventBusActivityScope;
 
 public class MainFragment extends BaseFragment<MainFragmentPresenter>
@@ -44,7 +44,7 @@ public class MainFragment extends BaseFragment<MainFragmentPresenter>
     @Override
     public void onNewBundle(Bundle args) {
         super.onNewBundle(args);
-        Toasty.normal(getContext(), "我是MainFragment", Toast.LENGTH_SHORT).show();
+//        Toasty.normal(getContext(), "我是MainFragment", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -143,4 +143,10 @@ public class MainFragment extends BaseFragment<MainFragmentPresenter>
         return true;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ToastUtil.show("我是MainFragment");
+//        Toast.makeText(mBaseActivity, "你好啊", Toast.LENGTH_SHORT).show();
+    }
 }

@@ -7,7 +7,7 @@ import com.wwf.component.base.BaseFragment;
 import com.wwf.component.view.find.IFindView;
 import com.wwf.component.presenter.fragment.find.FindPresenter;
 
-public class FindFragment extends BaseFragment<FindPresenter>  implements IFindView{
+public class FindFragment extends BaseFragment<FindPresenter> implements IFindView{
 
     //创建一个实例
     public static FindFragment newInstance(Bundle bundle) {

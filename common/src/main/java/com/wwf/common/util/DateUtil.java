@@ -5,7 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DataUtil {
+/**
+ * 日期工具类
+ */
+public class DateUtil {
     //    public static final String PATTERN2 = "yyyy年MM月dd日 HH:mm:ss";
     public static final String[] WEEKS = {"周日", "周一", "周二", "周三", "周四", "周五", "周六"};
 

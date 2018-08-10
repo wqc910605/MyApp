@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
+ * 在module中, 无法使用butterknife ,所以基类放到app下面
  * 对话框基类
  */
 public abstract class BaseDialogFragment extends DialogFragment {
@@ -89,7 +90,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
         super.onDestroyView();
         mContext = null;
         mActivity = null;
-        mUnbinder = null;
+        mUnbinder.unbind();
     }
 
     /**

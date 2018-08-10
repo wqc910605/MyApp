@@ -18,6 +18,10 @@ import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
+/**
+ * 在module中, 无法使用butterknife ,所以基类放到app下面
+ * @param <P>
+ */
 public abstract class BaseActivity<P extends Presenter> extends SupportActivity {
 
     protected P mPresenter;
@@ -116,6 +120,7 @@ public abstract class BaseActivity<P extends Presenter> extends SupportActivity 
             mPresenter.onDestroy();
             mPresenter = null;
         }
+        networkStateListener = null;
     }
 
 

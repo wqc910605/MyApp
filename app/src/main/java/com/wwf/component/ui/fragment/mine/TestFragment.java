@@ -82,8 +82,8 @@ public class TestFragment extends BaseFragment<TestPresenter> implements ITestVi
     }
 
     @Override
-    public void onNetwork(boolean isHasNetwork) {
-        super.onNetwork(isHasNetwork);
+    public void onNetState(boolean isHasNetwork) {
+        super.onNetState(isHasNetwork);
         if (isHasNetwork) {
             ToastUtil.show("有网络");
         } else {

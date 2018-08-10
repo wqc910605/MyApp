@@ -61,7 +61,7 @@ public class Util {
      * @param context 上下文
      * @return 状态栏高度
      */
-    public static int getStatusBarHeightTwo(Context context) {
+    public static int getStatusbarHeight(Context context) {
         int result = 0;
         int resourceId = context.getResources()
                 .getIdentifier("status_bar_height", "dimen", "android");
@@ -168,7 +168,10 @@ public class Util {
         return view;
     }
 
-    //隐藏虚拟按键
+    /**
+     * 隐藏虚拟按键
+     * @param context
+     */
     public static void hideNavKey(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //       设置屏幕始终在前面，不然点击鼠标，重新出现虚拟按键
@@ -185,13 +188,20 @@ public class Util {
         }
     }
 
-    //显示虚拟按键
+    /**
+     * 显示虚拟按键
+     * @param context
+     * @param systemUiVisibility
+     */
     public static void showNavKey(Context context, int systemUiVisibility) {
         ((Activity) context).getWindow().getDecorView().setSystemUiVisibility(systemUiVisibility);
     }
 
 
-    //删除文件
+    /**
+     *  删除文件
+     * @param filePath
+     */
     public static void deleteFile(String filePath) {
         File file = new File(filePath);
         if (file.exists()) {
@@ -291,11 +301,15 @@ public class Util {
      *                    应用商店包名 ,如果为""则由系统弹出应用商店列表供用户选择,否则调转到目标市场的应用详情界面，某些应用商店可能会失败
      * @param context     上下文
      *                    <p>
-     *                    com.qihoo.appstore  360手机助手
      *                    com.tencent.android.qqdownloader    应用宝
-     *                    com.taobao.appcenter    淘宝手机助手
      *                    com.hiapk.marketpho 安卓市场
      *                    cn.goapk.market 安智市场
+     *                    com.oppo.market OPPO应用商店
+     *                    com.qihoo.appstore 360手机助手
+     *                    com.baidu.appsearch 百度手机助手
+     *                    com.wandoujia.phoenix2 豌豆荚
+     *                    com.xiaomi.market 小米应用商店
+     *                    com.huawei.appmarket 华为应用商店
      */
     public static void openApplicationMarket(String packageName, String marketPkg, Context context) {
         try {

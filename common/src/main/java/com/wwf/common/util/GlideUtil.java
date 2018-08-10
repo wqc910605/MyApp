@@ -9,6 +9,9 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.wwf.common.R;
 
+/**
+ * glide 的工具类
+ */
 public class GlideUtil {
     /**
      * 设置圆形头像
@@ -49,7 +52,7 @@ public class GlideUtil {
         setHeadImage(context, url, R.mipmap.ic_launcher, false, imageView);
     }
 
-
+    //设置RequestOptions的方法
     private static RequestOptions getOptions(int placeholder, boolean isCircle) {
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.placeholder(placeholder).error(placeholder);
