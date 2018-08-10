@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MyApp</string>
+    <string name="tab_home">首页</string>
+    <string name="tab_message">消息</string>
+    <string name="tab_find">消息</string>
+    <string name="tab_mine">我的</string>
+    <string name="press_again_exit">再点一次退出应用</string>
+</resources>

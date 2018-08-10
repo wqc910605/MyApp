@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_action_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <View
+        android:id="@+id/view_status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+    <TextView
+        android:id="@+id/tv_actionbar_title"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_below="@+id/view_status_bar"
+        android:gravity="center"
+        android:paddingBottom="3dp"
+        />
+
+    <ImageView
+        android:id="@+id/iv_actionbar_left_back"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:padding="15dp"
+        android:layout_below="@+id/view_status_bar"
+        android:src="@mipmap/left_back" />
+    <View
+        android:id="@+id/view_actionbar_divider"
+        android:layout_width="match_parent"
+        android:background="#9c9c9c"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tv_actionbar_title"
+        />
+</RelativeLayout>

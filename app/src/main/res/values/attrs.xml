@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--自定义Actionbar的属性 -->
+    <declare-styleable name="CustomActionBar">
+
+        <attr name="bgColor" format="color" />
+
+        <attr name="statusColor" format="color" />
+
+        <attr name="textColor" format="color" />
+
+        <attr name="textSize" format="integer" />
+
+        <attr name="text" format="string" />
+
+        <attr name="isShowDivider" format="boolean" />
+
+        <attr name="isShowBack" format="boolean" />
+
+    </declare-styleable>
+</resources>
