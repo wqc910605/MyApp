@@ -146,7 +146,7 @@ public class MainFragment extends BaseFragment<MainFragmentPresenter>
     @Override
     public void onResume() {
         super.onResume();
-        ToastUtil.show("我是MainFragment");
+//        ToastUtil.show("我是MainFragment");
 //        Toast.makeText(mBaseActivity, "你好啊", Toast.LENGTH_SHORT).show();
     }
 }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.umeng.analytics.MobclickAgent;
 import com.wwf.common.mvp.presenter.Presenter;
 import com.wwf.common.mvp.view.IView;
 import com.wwf.common.net.listener.NetworkStateListener;
@@ -85,6 +86,8 @@ public abstract class BaseActivity<P extends Presenter> extends SupportActivity 
     @Override
     protected void onResume() {
         super.onResume();
+        //友盟统计
+        MobclickAgent.onResume(this);
         if (mPresenter != null) {
             mPresenter.onResume();
         }
@@ -93,6 +96,8 @@ public abstract class BaseActivity<P extends Presenter> extends SupportActivity 
     @Override
     protected void onPause() {
         super.onPause();
+        //友盟统计
+        MobclickAgent.onPause(this);
         if (mPresenter != null) {
             mPresenter.onPause();
         }
