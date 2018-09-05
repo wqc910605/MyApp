@@ -13,6 +13,7 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.Gravity;
@@ -23,6 +24,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -475,4 +477,5 @@ public class Util {
         }
         return null;
     }
+
 }

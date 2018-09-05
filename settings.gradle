@@ -1,1 +1,1 @@
-include ':app', ':common', ':bottom-navigation-bar'
+include ':app', ':common', ':bottom-navigation-bar', ':recyclerview_adapter'

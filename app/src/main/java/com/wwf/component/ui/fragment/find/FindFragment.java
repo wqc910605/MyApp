@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.wwf.component.R;
 import com.wwf.component.base.BaseFragment;
-import com.wwf.component.view.find.IFindView;
+import com.wwf.component.iview.find.IFindView;
 import com.wwf.component.presenter.fragment.find.FindPresenter;
 
 public class FindFragment extends BaseFragment<FindPresenter> implements IFindView{

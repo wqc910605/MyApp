@@ -62,15 +62,9 @@ dependencies {
     // Activity作用域的EventBus，更安全，可有效避免after onSavenInstanceState()异常
     api 'me.yokeyword:eventbus-activity-scope:1.1.0'
     api 'org.greenrobot:eventbus:3.1.1'
-    //recyclerview万能适配器
-    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
-    //下拉刷新控件 SmartRefreshLayout
-    api 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
-    //没有使用特殊Header，可以不加这行
-    api 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-14'
-    //版本 23以上（必须）
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
     //LeakCanary 内存泄漏检测工具
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
@@ -85,4 +79,6 @@ dependencies {
     //butterknife
     implementation 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
+
 }

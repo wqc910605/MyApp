@@ -1,46 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <com.wwf.component.ui.widget.CustomActionBar
         android:id="@+id/custom_action_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:bgColor="@color/blue"
-        app:layout_constraintStart_toStartOf="parent"
+        app:text="test"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/refresh_layout"
         app:statusColor="@color/blue"
-        app:text="test" />
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/smart_refresh_Layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/custom_action_bar"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:isShowBack="false"
+        app:bgColor="@color/blue"
+        app:textSize="18"
+        />
+
+    <com.adapter.refreshlayout.SwipeToLoadLayout
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/custom_action_bar"
+        android:id="@+id/refresh_layout"
         android:layout_width="0dp"
         android:layout_height="0dp">
-        <!--下拉刷新头布局-->
-       <!-- <LinearLayout
+        <com.adapter.refreshlayout.HeaderLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:gravity="center"
-            >
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>-->
+            android:layout_height="60dp"/>
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
+            android:id="@+id/swipe_target"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never"
-            android:scrollbars="none"
-            >
+            android:layout_height="wrap_content">
 
         </android.support.v7.widget.RecyclerView>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        <com.adapter.refreshlayout.FooterLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"/>
 
+    </com.adapter.refreshlayout.SwipeToLoadLayout>
 </android.support.constraint.ConstraintLayout>

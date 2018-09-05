@@ -1,4 +1,4 @@
-package com.wwf.component.view.find;
+package com.wwf.component.iview.find;
 
 
 import com.wwf.common.mvp.view.IView;

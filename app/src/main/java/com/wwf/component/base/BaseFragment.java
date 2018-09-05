@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.umeng.analytics.MobclickAgent;
+import com.wwf.common.listener.PermissionListener;
 import com.wwf.common.mvp.presenter.Presenter;
 import com.wwf.common.mvp.view.IView;
+import com.wwf.common.util.LogUtil;
 import com.wwf.component.R;
 
 import butterknife.ButterKnife;
@@ -18,16 +20,23 @@ import butterknife.Unbinder;
 import me.yokeyword.fragmentation.SupportFragment;
 
 /**
- * 在module中, 无法使用butterknife ,所以基类放到app下面
- *
  * @param <P>
  */
 public abstract class BaseFragment<P extends Presenter> extends SupportFragment {
 
+    private static final String TAG = "lifecycle:: ";
     private Unbinder mUnbinder;
     protected P mPresenter;
     private ImageView mIvActionBarLeftBack;
     protected BaseActivity mBaseActivity;
+
+    private PermissionListener mPermissionListener = new PermissionListener() {
+        @Override
+        public void onPermission(int requestCode, @NonNull int[] grantResults) {
+            onPermissionResult(requestCode, grantResults);
+        }
+    };
+
 
     /**
      * 网络状态监听器
@@ -64,6 +73,7 @@ public abstract class BaseFragment<P extends Presenter> extends SupportFragment 
         if (mPresenter != null) {
             mPresenter.onCreateView(savedInstanceState);
         }
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onCreateView");
         return view;
     }
 
@@ -72,6 +82,7 @@ public abstract class BaseFragment<P extends Presenter> extends SupportFragment 
 //        String simpleName = this.getClass().getSimpleName();
         //界面被创建之前
 //        Toasty.normal(mBaseActivity, "我被创建了 " + simpleName, Toast.LENGTH_SHORT).show();
+        mBaseActivity.setPermissionListener(mPermissionListener);
         mSimpleName = this.getClass().getSimpleName();
         beforCreate(savedInstanceState);
         super.onViewCreated(view, savedInstanceState);
@@ -83,11 +94,13 @@ public abstract class BaseFragment<P extends Presenter> extends SupportFragment 
         initActionBar(view);
         initData();
         initListener();
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onViewCreated");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onResume");
         if (mPresenter != null) {
             mPresenter.onResume();
         }
@@ -96,11 +109,22 @@ public abstract class BaseFragment<P extends Presenter> extends SupportFragment 
     @Override
     public void onPause() {
         super.onPause();
-        MobclickAgent.onPageEnd(mSimpleName);
+        if (setUmengStatistics()) {
+            MobclickAgent.onPageEnd(mSimpleName);
+        }
         isVisible = false;
         if (mPresenter != null) {
             mPresenter.onPause();
         }
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onPause");
+    }
+
+    /**
+     * 是否开启友盟统计, 默认开启
+     * @return
+     */
+    protected boolean setUmengStatistics() {
+        return true;
     }
 
     @Override
@@ -110,6 +134,7 @@ public abstract class BaseFragment<P extends Presenter> extends SupportFragment 
         if (mPresenter != null) {
             mPresenter.onStop();
         }
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onStop");
     }
 
     @Override
@@ -118,6 +143,8 @@ public abstract class BaseFragment<P extends Presenter> extends SupportFragment 
         mUnbinder.unbind();//解绑butterknife
         //注册网络状态监听器
         mBaseActivity.setOnNetworkListener(null);
+        mPermissionListener = null;
+        mBaseActivity.setPermissionListener(null);
         mOnNetworkListener = null;
         mBaseActivity = null;
         if (mPresenter != null) {
@@ -125,19 +152,22 @@ public abstract class BaseFragment<P extends Presenter> extends SupportFragment 
             mPresenter = null;
             mBaseActivity = null;
         }
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onDestroyView");
     }
 
     @Override
     public void onSupportVisible() {
         super.onSupportVisible();
         isVisible = true;
-        MobclickAgent.onPageStart(mSimpleName);
+        if (setUmengStatistics()) {
+            MobclickAgent.onPageStart(mSimpleName);
+        }
 //        MobclickAgent.onResume(this);
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onSupportVisible");
     }
 
     /**
      * 当使用singleTask或者singleTop模式, 跳转界面时, 接受新意图, 类似于activity中的onNewIntent()方法
-     *
      * @param args
      */
     @Override
@@ -228,6 +258,15 @@ public abstract class BaseFragment<P extends Presenter> extends SupportFragment 
      */
     public void finishPage() {
         this.pop();
+    }
+
+    /**
+     * 权限请求回调结果处理
+     * @param requestCode
+     * @param grantResults
+     */
+    public void onPermissionResult(int requestCode, int[] grantResults) {
+
     }
 
 

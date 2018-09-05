@@ -2,21 +2,28 @@ package com.wwf.component.ui.fragment.main;
 
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.wwf.common.util.ToastUtil;
 import com.wwf.component.R;
 import com.wwf.common.eventbus.TabSelectedEvent;
 import com.wwf.component.base.BaseFragment;
 import com.wwf.component.presenter.main.MainFragmentPresenter;
+import com.wwf.component.ui.activity.MainActivity;
 import com.wwf.component.ui.fragment.find.FindFragment;
 import com.wwf.component.ui.fragment.home.HomeFragment;
 import com.wwf.component.ui.fragment.message.MessageFragment;
 import com.wwf.component.ui.fragment.mine.MineFragment;
-import com.wwf.component.view.main.IMainFragmentView;
+import com.wwf.component.iview.main.IMainFragmentView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +40,7 @@ public class MainFragment extends BaseFragment<MainFragmentPresenter>
 
     private List<BaseFragment> mFragments = new ArrayList<>();
     private int prePosition;//前一个选中的tab项
+    private MainActivity mMainActivity;
 
     //创建一个实例
     public static MainFragment newInstance(Bundle bundle) {
@@ -44,6 +52,8 @@ public class MainFragment extends BaseFragment<MainFragmentPresenter>
     @Override
     public void onNewBundle(Bundle args) {
         super.onNewBundle(args);
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //        Toasty.normal(getContext(), "我是MainFragment", Toast.LENGTH_SHORT).show();
     }
 
@@ -59,6 +69,8 @@ public class MainFragment extends BaseFragment<MainFragmentPresenter>
 
     @Override
     protected void initData() {
+        mMainActivity = (MainActivity) getActivity();
+        EventBus.getDefault().register(this);
         //初始化fragment对象
         initFragment();
         //初始化底部导航按钮
@@ -98,6 +110,7 @@ public class MainFragment extends BaseFragment<MainFragmentPresenter>
                 .setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STILL)
                 .setMode(BottomNavigationBar.MODE_STILL)
                 .initialise();
+        botNavBar.selectTab(mMainActivity.position);
     }
 
     @Override
@@ -110,6 +123,8 @@ public class MainFragment extends BaseFragment<MainFragmentPresenter>
     public void onTabSelected(int position) {
         showHideFragment(mFragments.get(position), mFragments.get(prePosition));
         prePosition = position;
+        //在mainactivity中记录选中的位置
+        mMainActivity.position = position;
     }
 
     @Override
@@ -148,5 +163,21 @@ public class MainFragment extends BaseFragment<MainFragmentPresenter>
         super.onResume();
 //        ToastUtil.show("我是MainFragment");
 //        Toast.makeText(mBaseActivity, "你好啊", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
+        mMainActivity = null;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onSelectedPosition(TabSelectedEvent tabSelectedEvent) {
+        if (tabSelectedEvent != null) {
+            botNavBar.selectTab(tabSelectedEvent.position );
+        }
+        //移除粘性事件
+        EventBus.getDefault().removeStickyEvent(tabSelectedEvent);
     }
 }

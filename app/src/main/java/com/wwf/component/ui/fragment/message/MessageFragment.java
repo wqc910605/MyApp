@@ -5,7 +5,7 @@ import android.os.Bundle;
 import com.wwf.component.R;
 import com.wwf.component.base.BaseFragment;
 import com.wwf.component.presenter.fragment.message.MessagePresenter;
-import com.wwf.component.view.message.IMessageView;
+import com.wwf.component.iview.message.IMessageView;
 
 public class MessageFragment extends BaseFragment<MessagePresenter> implements IMessageView {
     //创建一个实例

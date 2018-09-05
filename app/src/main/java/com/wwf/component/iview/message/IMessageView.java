@@ -1,4 +1,4 @@
-package com.wwf.component.view.message;
+package com.wwf.component.iview.message;
 
 
 import com.wwf.common.mvp.view.IView;

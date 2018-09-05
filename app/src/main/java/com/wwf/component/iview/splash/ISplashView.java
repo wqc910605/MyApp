@@ -1,4 +1,4 @@
-package com.wwf.component.view.splash;
+package com.wwf.component.iview.splash;
 
 import com.wwf.common.mvp.view.IView;
 

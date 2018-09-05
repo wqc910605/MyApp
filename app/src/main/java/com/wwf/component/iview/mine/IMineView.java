@@ -1,4 +1,4 @@
-package com.wwf.component.view.mine;
+package com.wwf.component.iview.mine;
 
 
 import com.wwf.common.mvp.view.IView;

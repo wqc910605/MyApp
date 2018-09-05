@@ -4,18 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.Toast;
 
+import com.wwf.common.bean.BaseBean;
 import com.wwf.common.mvp.view.IView;
 import com.wwf.common.net.retrofit.RetrofitUtil;
+import com.wwf.common.util.GsonUtil;
 import com.wwf.common.util.NetworkUtil;
 import com.wwf.common.util.ThreadUtil;
+
+import org.reactivestreams.Subscription;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -35,6 +39,7 @@ public abstract class Presenter<V extends IView> implements IPresenter {
     protected V mView;
 //    protected Handler mHandler;
     private List<Disposable> mDisposables;
+    private boolean isDestroy;//界面是否销毁, 默认在运行
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +84,7 @@ public abstract class Presenter<V extends IView> implements IPresenter {
      */
     @Override
     public void onDestroy() {
+        isDestroy = true;
         release();
     }
 
@@ -92,11 +98,11 @@ public abstract class Presenter<V extends IView> implements IPresenter {
                 //取消订阅后, 集合置空
                 mDisposables = null;
             }
-            //延迟一会儿, 释放资源, 防止mView调用时, 为空, (有一种情况, Retrofit调用成功后, 再取消请求, 成功时, 还是会回调数据的)
+           /* //延迟一会儿, 释放资源, 防止mView调用时, 为空, (有一种情况, Retrofit调用成功后, 再取消请求, 成功时, 还是会回调数据的)
             ThreadUtil.postDelayed(() -> {
                 mContext = null;
                 mView = null;
-            }, 1200);
+            }, 1200);*/
         }
     }
 
@@ -128,21 +134,30 @@ public abstract class Presenter<V extends IView> implements IPresenter {
      * @param params  请求参数
      * @param urlflag 每个地址对应一个唯一标记, 用来区分不同的请求
      */
-    public void post(String path, Map<String, Object> params, int urlflag) {
+    public void post(String path, Map<String, Object> params, int urlflag, Class<?> clazz) {
         if (NetworkUtil.isNetworkAvailable(mContext)) {
-            Disposable disposable = RetrofitUtil.getInstance()
+            Observable observable = new Observable() {
+
+            };
+            Disposable disposable = RetrofitUtil
+                    .getInstance()
                     .getApiService()
                     .post(path, params)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(json -> {//成功
-                        if (TextUtils.isEmpty(json)) {
-                            onFailure("网络异常", urlflag);
-                        } else {
-                            onSuccess(json, urlflag);
+                        if (!isDestroy) {
+                            if (TextUtils.isEmpty(json)) {
+                                onFailure("网络异常", urlflag);
+                            } else {
+                                BaseBean<?> baseBean = GsonUtil.parseJson2Bean(json, clazz);
+                                onSuccess(baseBean, urlflag);
+                            }
                         }
                     }, throwable -> {//异常
-                        onFailure(throwable.getMessage(), urlflag);
+                        if (!isDestroy) {
+                            onFailure(throwable.getMessage(), urlflag);
+                        }
                     });
             mDisposables.add(disposable);
         } else {
@@ -151,7 +166,7 @@ public abstract class Presenter<V extends IView> implements IPresenter {
     }
 
     //上传图片, 可以上传多张图片
-    public void uploadImg(String path, List<String> localImgPaths, Map<String, Object> params, int urlflag) {
+    public void uploadImg(String path, List<String> localImgPaths, Map<String, Object> params, int urlflag, Class<?> clazz) {
         if (localImgPaths == null) {
 //            Toasty.warning(mContext, "图片地址为空", Toast.LENGTH_SHORT).show();
             return;
@@ -171,7 +186,8 @@ public abstract class Presenter<V extends IView> implements IPresenter {
                         if (TextUtils.isEmpty(json)) {
                             onFailure("网络异常", urlflag);
                         } else {
-                            onSuccess(json, urlflag);
+                            BaseBean<?> baseBean = GsonUtil.parseJson2Bean(json, clazz);
+                            onSuccess(baseBean, urlflag);
                         }
                     }, throwable -> {
                         onFailure(throwable.getMessage(), urlflag);
@@ -183,7 +199,7 @@ public abstract class Presenter<V extends IView> implements IPresenter {
     }
 
     //成功
-    protected void onSuccess(String json, int urlflag) {
+    protected void onSuccess(BaseBean baseBean, int urlflag) {
 
     }
 

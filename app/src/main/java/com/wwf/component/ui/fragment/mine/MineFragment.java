@@ -8,8 +8,9 @@ import android.widget.TextView;
 import com.wwf.component.R;
 import com.wwf.component.base.BaseFragment;
 import com.wwf.component.presenter.fragment.mine.MinePresenter;
+import com.wwf.component.ui.fragment.TestFragment;
 import com.wwf.component.ui.fragment.main.MainFragment;
-import com.wwf.component.view.mine.IMineView;
+import com.wwf.component.iview.mine.IMineView;
 
 import butterknife.BindView;
 import butterknife.Unbinder;

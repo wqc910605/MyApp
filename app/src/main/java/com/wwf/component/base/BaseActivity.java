@@ -4,14 +4,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.umeng.analytics.MobclickAgent;
+import com.wwf.common.listener.PermissionListener;
 import com.wwf.common.mvp.presenter.Presenter;
 import com.wwf.common.mvp.view.IView;
 import com.wwf.common.net.listener.NetworkStateListener;
 import com.wwf.common.net.receiver.NetworkBroadcastReceiver;
+import com.wwf.common.util.LogUtil;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -20,7 +23,6 @@ import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 /**
- * 在module中, 无法使用butterknife ,所以基类放到app下面
  * @param <P>
  */
 public abstract class BaseActivity<P extends Presenter> extends SupportActivity {
@@ -28,6 +30,11 @@ public abstract class BaseActivity<P extends Presenter> extends SupportActivity 
     protected P mPresenter;
     private Unbinder mUnbinder;
     private NetworkBroadcastReceiver mNetworkStateReceiver;
+    private ImmersionBar mImmersionBar;
+    private OnNetworkListener mOnNetworkListener;//网络状态监听器
+    private PermissionListener mPermissionListener;//权限监听回调
+    public static final String TAG = "lifecycle:: ";
+
     //网络状态, 是否有网络
     protected boolean hasNetwork;
 
@@ -60,13 +67,13 @@ public abstract class BaseActivity<P extends Presenter> extends SupportActivity 
 //            Toast.makeText(BaseActivity.this, "wifi网络", Toast.LENGTH_SHORT).show();
         }
     };
-    private ImmersionBar mImmersionBar;
-    private OnNetworkListener mOnNetworkListener;//网络状态监听器
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         beforCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onCreate");
         setContentView(getLayoutResId());
         //状态栏
         mImmersionBar = ImmersionBar.with(this);
@@ -87,20 +94,33 @@ public abstract class BaseActivity<P extends Presenter> extends SupportActivity 
     protected void onResume() {
         super.onResume();
         //友盟统计
-        MobclickAgent.onResume(this);
+        if (setUmengStatistics()) {
+            MobclickAgent.onResume(this);
+        }
         if (mPresenter != null) {
             mPresenter.onResume();
         }
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onResume");
+    }
+    /**
+     * 是否开启友盟统计, 默认开启
+     * @return
+     */
+    private boolean setUmengStatistics() {
+        return true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         //友盟统计
-        MobclickAgent.onPause(this);
+        if (setUmengStatistics()) {
+            MobclickAgent.onPause(this);
+        }
         if (mPresenter != null) {
             mPresenter.onPause();
         }
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onPause");
     }
 
     @Override
@@ -109,6 +129,7 @@ public abstract class BaseActivity<P extends Presenter> extends SupportActivity 
         if (mPresenter != null) {
             mPresenter.onStop();
         }
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onStop");
     }
 
     @Override
@@ -125,9 +146,30 @@ public abstract class BaseActivity<P extends Presenter> extends SupportActivity 
             mPresenter.onDestroy();
             mPresenter = null;
         }
+        mPermissionListener = null;
         networkStateListener = null;
+        mOnNetworkListener = null;
+        mPermissionListener = null;
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onDestroy");
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onSaveInstanceState outPersistentState");
+//        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onSaveInstanceState");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        LogUtil.e(TAG, this.getClass().getSimpleName()+" onRestoreInstanceState");
+    }
 
     //初始化presenter时, 调用setPresenter方法即可
     protected abstract void initPresenter();
@@ -185,4 +227,17 @@ public abstract class BaseActivity<P extends Presenter> extends SupportActivity 
     public void setOnNetworkListener(OnNetworkListener onNetworkListener) {
         this.mOnNetworkListener = onNetworkListener;
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (mPermissionListener != null) {
+            mPermissionListener.onPermission(requestCode, grantResults);
+        }
+    }
+
+    public void setPermissionListener(PermissionListener permissionListener) {
+        this.mPermissionListener = permissionListener;
+    }
+
 }
